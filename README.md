@@ -1,3 +1,6 @@
+<p align="center">
+  <img width="1500" height="591" alt="1500x591_revolucion-iol-invertironline-marca-se-transforma-903389-085044" src="https://github.com/user-attachments/assets/cc79c4ef-c8b3-4833-bbde-b14628f21bd7" />
+</p>
 # URL Shortener
 
 URL shortener built with **NestJS + TypeScript**, using **Prisma/PostgreSQL**, **Zod** and
