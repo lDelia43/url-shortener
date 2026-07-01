@@ -1,0 +1,28 @@
+// Prisma schema — URL Shortener
+// Two models: Counter (atomic global counter) and Url (the shortened links).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Global counter. It holds a SINGLE row (id = 1) whose `value` is incremented
+/// atomically with `UPDATE ... RETURNING` to generate the next code.
+/// Postgres' row-lock serializes concurrent increments => no collisions.
+model Counter {
+  id    Int    @id @default(1)
+  value BigInt @default(0)
+}
+
+/// A shortened link. `code` is the Base62 code (derived from the counter), unique
+/// and indexed because it is the lookup key in the GET /:code redirect.
+model Url {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  longUrl   String
+  createdAt DateTime @default(now())
+}

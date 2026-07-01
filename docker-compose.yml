@@ -1,0 +1,38 @@
+# Brings up the whole stack with `docker compose up`.
+# Credentials come from environment variables with development defaults (nothing
+# hardcoded as a secret): they can be overridden with a root .env or shell variables.
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-url_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-url_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-url_shortener}
+    ports:
+      - '${DB_PORT:-5432}:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # The back-end waits until Postgres is actually ready, not just started.
+      test:
+        ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-url_user} -d ${POSTGRES_DB:-url_shortener}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Inside the compose network the DB host is `db`, not localhost.
+      DATABASE_URL: postgresql://${POSTGRES_USER:-url_user}:${POSTGRES_PASSWORD:-url_pass}@db:5432/${POSTGRES_DB:-url_shortener}?schema=public&connection_limit=10
+      PORT: ${PORT:-3000}
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+    ports:
+      - '${PORT:-3000}:${PORT:-3000}'
+
+volumes:
+  pgdata:
