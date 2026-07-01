@@ -153,7 +153,28 @@ server. Therefore, 301 is the right choice for this scope.
 
 ---
 
-## 7. Use of AI
+## 7. Testing and CI
+
+The tests are split by what they need and what they prove, not by count:
+
+- **Unit (no DB):** `short-code-generator.spec.ts` checks the Base62 pure function (alphabet
+  boundaries, carry, `bigint`); `url-shortener.service.spec.ts` checks cache-aside (a HIT does not
+  hit the store, a MISS populates it); `url-shortener.controller.spec.ts` checks the controller
+  delegates to the service and shapes the 301 response.
+- **Integration (real Postgres):** `prisma-url-store.integration.spec.ts` fires many concurrent
+  creations and asserts the codes are all distinct. This is the test that actually proves the
+  atomic-counter decision (section 3) — a guarantee that cannot be validated in process memory.
+- **E2E (no DB):** `app.e2e-spec.ts` drives the full HTTP flow (301 / 404 / 400). Thanks to the
+  ports, it overrides the store with the in-memory one, so it needs no external infrastructure.
+
+**CI (GitHub Actions):** every push and pull request to `main` runs the whole gate — lint (with
+`@typescript-eslint/no-explicit-any` as an error), format check, build, and the three test layers —
+with a Postgres service container for the integration step. This enforces the challenge's "must
+build and pass tests" requirement automatically on every change.
+
+---
+
+## 8. Use of AI
 
 I built this project with Claude Code (Claude Opus) as a pair-programming assistant. I made
 every design decision and drove the process; the assistant generated code, tests and
