@@ -170,7 +170,31 @@ build and pass tests" requirement automatically on every change.
 
 ---
 
-## 8. Use of AI
+## 8. Design patterns used
+
+- **Ports & Adapters (Hexagonal):** `UrlStore` and `UrlCache` are ports (interfaces);
+  `PrismaUrlStore` / `InMemoryUrlStore` / `InMemoryUrlCache` are the adapters. The business logic
+  depends on the port, never on the concrete class — that is what lets the store be swapped for an
+  in-memory one in tests and the cache become Redis later. The swappable adapter behind a port is
+  effectively the **Strategy** pattern applied at the DI level.
+- **Dependency Injection / Inversion of Control:** collaborators are injected by constructor and
+  resolved by token (`URL_STORE`, `URL_CACHE`) through Nest's container. The service never
+  instantiates its dependencies; the module decides the wiring.
+- **Cache-Aside (lazy loading):** the read path checks the cache, falls back to the store on a miss
+  and populates the cache (section 4); writes bypass the cache.
+- **Pipe (validation):** `ZodValidationPipe` is a composable per-route validation/transformation
+  step (Nest's Pipe pattern) that turns untrusted input into a typed value or a 400.
+- **Singleton providers:** Nest instantiates providers once per app (default scope), so a single
+  `PrismaService` (one connection pool) is shared across the graph.
+
+**Deliberately NOT used:** the Repository and Unit-of-Work patterns. The persistence abstraction is
+a minimal port (`UrlStore`, three methods), not a full repository, and there is a single atomic
+operation, so a Unit of Work would be ceremony without a use case — hence the folder is
+`persistence`, not `repositories`.
+
+---
+
+## 9. Use of AI
 
 I built this project with Claude Code (Claude Opus) as a pair-programming assistant. I made
 every design decision and drove the process; the assistant generated code, tests and
