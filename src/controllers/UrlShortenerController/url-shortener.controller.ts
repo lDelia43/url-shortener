@@ -50,7 +50,6 @@ export class UrlShortenerController {
   }
 
   @Get(':code')
-  // @Redirect() with no fixed URL: the handler returns a dynamic { url, statusCode }.
   @Redirect()
   @ApiOperation({ summary: 'Redirects the short code to the original URL' })
   @ApiParam({ name: 'code', example: 'b', description: 'Base62 code' })

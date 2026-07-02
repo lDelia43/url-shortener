@@ -36,18 +36,14 @@ docker compose up --build    # db + app (migrates and starts on its own)
 
 ## Architecture
 
-`src/` is organized **by technical type, one folder per component**, with one **module per layer**
-so each layer encapsulates its own providers. `app.module` imports only `ControllersModule`; the
-chain pulls in the rest.
+`src/` is organized **by technical type, one folder per component**, but wired with a single
+**feature module** (idiomatic Nest: one module per feature, not per layer).
 
-Module chain (imports/exports): `AppModule → ControllersModule → ServicesModule → RepositoriesModule`.
-- `controllers/controllers.module.ts` — declares every controller, imports `ServicesModule`. Knows
-  nothing about Prisma. **Add a controller here and it is wired into the app** (app.module never changes).
-- `services/services.module.ts` — provides + exports every service, imports `RepositoriesModule`.
-- `repositories/repositories.module.ts` — binds each port to its adapter
-  (`URL_STORE → PrismaUrlStore`, `URL_CACHE → InMemoryUrlCache`) and exports **only the tokens**, so
-  `PrismaService` stays encapsulated in this layer. The e2e tests override `URL_STORE`/`PrismaService`
-  with `.overrideProvider(...)`.
+- `app.module.ts` — imports `ConfigModule` (global) + `UrlShortenerModule`.
+- `modules/url-shortener.module.ts` — the feature module. Declares the controller and provides the
+  service, `PrismaService`, and the port bindings (`URL_STORE → PrismaUrlStore`,
+  `URL_CACHE → InMemoryUrlCache`). The e2e tests override `URL_STORE` / `PrismaService` with
+  `.overrideProvider(...)`.
 
 Components (each in its own PascalCase folder with its `.spec`):
 - `controllers/UrlShortenerController/` — HTTP (2 routes, Zod pipe, redirect).

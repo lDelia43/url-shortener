@@ -3,22 +3,16 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { StoredUrl, UrlStore } from '../common/url-store.interface';
 
-/** Real store implementation against Postgres via Prisma. */
 @Injectable()
 export class PrismaUrlStore implements UrlStore {
   constructor(private readonly prisma: PrismaService) {}
 
   async nextSequenceValue(): Promise<bigint> {
-    // `UPDATE ... RETURNING` is an atomic operation: it takes a row-lock on the
-    // counter row, so two concurrent transactions serialize and each one gets a
-    // distinct `value`. That is where the no-collision guarantee lives, in Postgres
-    // and not in the process memory => it works with N back-end instances.
     const rows = await this.prisma.$queryRaw<{ value: bigint }[]>(
       Prisma.sql`UPDATE "Counter" SET value = value + 1 WHERE id = 1 RETURNING value`,
     );
 
     if (rows.length === 0) {
-      // Should never happen: the counter row is seeded in the initial migration.
       throw new Error('The counter row (Counter id=1) does not exist');
     }
     return rows[0].value;

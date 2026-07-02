@@ -30,11 +30,7 @@ export class UrlShortenerService {
   }
 
   /**
-   * Creates a short link. It is a write: it goes straight to the store (it does not
-   * touch the cache).
-   * 1) asks for the next counter value (atomic in the DB),
-   * 2) encodes it in Base62,
-   * 3) persists the code -> longUrl mapping.
+   * Creates a short link.
    */
   async shorten(longUrl: string): Promise<string> {
     const sequenceValue = await this.store.nextSequenceValue();
@@ -47,14 +43,12 @@ export class UrlShortenerService {
 
   /**
    * Resolves a code to its longUrl with cache-aside: cache first; if it is not
-   * there, go to the store, populate the cache and respond. Ideal for the
-   * read-heavy ratio of the redirect. Throws NotFoundException if the code does
-   * not exist.
+   * there, go to the store, populate the cache and respond.
    */
   async resolve(code: string): Promise<string> {
     const cached = await this.cache.get(code);
     if (cached !== null) {
-      return cached; // cache HIT: we do not touch the store
+      return cached;
     }
 
     const url = await this.store.findByCode(code);

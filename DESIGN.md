@@ -66,10 +66,6 @@ same number → two different URLs with the same code → collision / data loss.
 **Solution:** the counter lives in Postgres (`Counter` table, a single row) and is incremented
 with an **atomic operation**:
 
-```sql
-UPDATE "Counter" SET value = value + 1 WHERE id = 1 RETURNING value;
-```
-
 `UPDATE ... RETURNING` takes a **row-lock** on the counter row. Two concurrent transactions
 **serialize**: one waits for the other to finish, so each one gets a distinct `value`. The
 uniqueness guarantee lives in the database, **not in the Node process memory**.
@@ -209,6 +205,5 @@ boilerplate under my direction, and I reviewed and iterated on all of it.
 
 ### What I verified and adjusted by hand
 
-- Removed a deprecated `baseUrl` from `tsconfig` instead of silencing the warning.
 - Reviewed every file: I keep the code minimal and commented where it adds value, and I can
   explain each function.

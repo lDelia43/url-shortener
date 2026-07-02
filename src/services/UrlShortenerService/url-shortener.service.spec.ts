@@ -13,8 +13,6 @@ describe('UrlShortenerService', () => {
   beforeEach(() => {
     store = new InMemoryUrlStore();
     cache = new InMemoryUrlCache();
-    // Real ConfigService seeded with a full AppConfig (no casts): the service only
-    // reads BASE_URL, but we provide all keys so the type checks without shortcuts.
     const configService = new ConfigService<AppConfig, true>({
       DATABASE_URL: 'postgresql://test',
       PORT: 3000,
