@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UrlShortenerController } from '../controllers/UrlShortenerController/url-shortener.controller';
 import { PrismaService } from '../prisma/prisma.service';
-import { InMemoryUrlCache } from '../repositories/InMemoryUrlCache/in-memory-url-cache';
-import { PrismaUrlStore } from '../repositories/PrismaUrlStore/prisma-url-store';
-import { URL_CACHE } from '../repositories/common/url-cache.interface';
-import { URL_STORE } from '../repositories/common/url-store.interface';
+import { InMemoryUrlCache } from '../persistence/InMemoryUrlCache/in-memory-url-cache';
+import { PrismaUrlStore } from '../persistence/PrismaUrlStore/prisma-url-store';
+import { URL_CACHE } from '../persistence/common/url-cache.interface';
+import { URL_STORE } from '../persistence/common/url-store.interface';
 import { UrlShortenerService } from '../services/UrlShortenerService/url-shortener.service';
 
 /**

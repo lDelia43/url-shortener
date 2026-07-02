@@ -5,11 +5,11 @@ import { encodeBase62 } from '../../generators/ShortCodeGenerator/short-code-gen
 import {
   URL_CACHE,
   UrlCache,
-} from '../../repositories/common/url-cache.interface';
+} from '../../persistence/common/url-cache.interface';
 import {
   URL_STORE,
   UrlStore,
-} from '../../repositories/common/url-store.interface';
+} from '../../persistence/common/url-store.interface';
 
 /**
  * Orchestrates the business logic: generates codes (counter + Base62) and resolves

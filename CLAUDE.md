@@ -49,10 +49,10 @@ Components (each in its own PascalCase folder with its `.spec`):
 - `controllers/UrlShortenerController/` — HTTP (2 routes, Zod pipe, redirect).
 - `services/UrlShortenerService/` — orchestrates store + cache + generator.
 - `generators/ShortCodeGenerator/` — Base62 (**pure function**, `bigint`).
-- `repositories/PrismaUrlStore|InMemoryUrlStore|InMemoryUrlCache/` — the adapters.
+- `persistence/PrismaUrlStore|InMemoryUrlStore|InMemoryUrlCache/` — the adapters.
 
 Shared / grouped (never loose files):
-- `repositories/common/` — the ports `url-store.interface.ts` / `url-cache.interface.ts`, each with
+- `persistence/common/` — the ports `url-store.interface.ts` / `url-cache.interface.ts`, each with
   its DI token (`URL_STORE` / `URL_CACHE` as `Symbol`, since a TS interface has no runtime value).
 - `common/dto/` — Zod schemas (`*.schema.ts`) + Swagger mirror classes (`*.dto.ts`).
 - `common/zod-validation.pipe.ts`, `config/`, `prisma/`.

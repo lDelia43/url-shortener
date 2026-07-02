@@ -1,5 +1,5 @@
 import { encodeBase62 } from '../src/generators/ShortCodeGenerator/short-code-generator';
-import { PrismaUrlStore } from '../src/repositories/PrismaUrlStore/prisma-url-store';
+import { PrismaUrlStore } from '../src/persistence/PrismaUrlStore/prisma-url-store';
 import { PrismaService } from '../src/prisma/prisma.service';
 
 /**

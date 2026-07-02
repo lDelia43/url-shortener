@@ -3,8 +3,8 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { URL_STORE } from '../src/repositories/common/url-store.interface';
-import { InMemoryUrlStore } from '../src/repositories/InMemoryUrlStore/in-memory-url-store';
+import { URL_STORE } from '../src/persistence/common/url-store.interface';
+import { InMemoryUrlStore } from '../src/persistence/InMemoryUrlStore/in-memory-url-store';
 
 /**
  * End-to-end test of the full HTTP flow. Thanks to the ports, we override the real

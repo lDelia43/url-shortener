@@ -1,8 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from '../../config/env.validation';
-import { InMemoryUrlCache } from '../../repositories/InMemoryUrlCache/in-memory-url-cache';
-import { InMemoryUrlStore } from '../../repositories/InMemoryUrlStore/in-memory-url-store';
+import { InMemoryUrlCache } from '../../persistence/InMemoryUrlCache/in-memory-url-cache';
+import { InMemoryUrlStore } from '../../persistence/InMemoryUrlStore/in-memory-url-store';
 import { UrlShortenerService } from './url-shortener.service';
 
 describe('UrlShortenerService', () => {
